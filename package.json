@@ -25,5 +25,9 @@
   "homepage": "https://github.com/lolPants/minesweeper-bot#readme",
   "devDependencies": {
     "eslint": "^5.12.1"
+  },
+  "dependencies": {
+    "discord.js": "github:discordjs/discord.js",
+    "dotenv": "^6.2.0"
   }
 }
