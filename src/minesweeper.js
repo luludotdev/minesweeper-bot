@@ -62,7 +62,7 @@ const generate = (width = 9, height = 9, bombs = 10) => {
  */
 const translate = board => {
   const lookup = [
-    ':zero:',
+    '⬜',
     ':one:',
     ':two:',
     ':three:',
