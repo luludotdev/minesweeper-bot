@@ -15,7 +15,7 @@ scripts:
 
 after_success:
   - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
-  - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+  - docker login -u $DOCKER_USER -p $DOCKER_PASS
   - export REPO=lolpants/minesweeper-bot
   - export TAG=$(if [ "$BRANCH" == "master" ]; then echo "latest"; else echo $BRANCH ; fi)
   - docker build -f Dockerfile -t $REPO:$TRAVIS_COMMIT .
