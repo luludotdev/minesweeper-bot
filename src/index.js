@@ -1,7 +1,7 @@
 const log = require('fancylog')
 const dotenv = require('dotenv')
 const exitHook = require('async-exit-hook')
-const { Client } = require('discord.js')
+const { Client, MessageEmbed } = require('discord.js')
 const { minesweeper } = require('./minesweeper.js')
 
 // Load Environment Variables
@@ -41,6 +41,24 @@ client.on('message', async message => {
 
     const invite = await client.generateInvite(permissions)
     return message.channel.send(`<${invite}>`)
+  } else if (command === 'minesweeper about') {
+    const commands = [
+      `\`${prefix}minesweeper\` Generate a Minesweeper board`,
+      `\`${prefix}minesweeper invite\` Generate a bot invite URL`,
+      `\`${prefix}minesweeper about\` Show this message`,
+    ].join('\n')
+
+    // Send About Text
+    const embed = new MessageEmbed()
+      .setColor('#afa5fd')
+      .setAuthor('lolPants#0001', 'https://b.catgirlsare.sexy/fFXa.gif')
+      .setThumbnail('https://b.catgirlsare.sexy/koRa.png')
+      .setDescription('Play minesweeper from within Discord!')
+      .addField('Created By', '`lolPants#0001`')
+      .addField('GitHub', 'https://github.com/lolPants/minesweeper-bot')
+      .addField('Commands', commands)
+
+    return message.channel.send({ embed })
   } else {
     return undefined
   }
