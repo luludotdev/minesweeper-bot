@@ -1,4 +1,5 @@
 const log = require('fancylog')
+const http = require('http')
 const dotenv = require('dotenv')
 const exitHook = require('async-exit-hook')
 const { Client, MessageEmbed } = require('discord.js')
@@ -6,7 +7,7 @@ const { minesweeper } = require('./minesweeper.js')
 
 // Load Environment Variables
 dotenv.load()
-const { TOKEN, PREFIX } = process.env
+const { TOKEN, PREFIX, PORT } = process.env
 const prefix = PREFIX || '!'
 
 // Create the Bot Client
@@ -14,9 +15,25 @@ const client = new Client()
 client.login(TOKEN)
   .catch(log.error)
 
+// Create the stats server
+const server = http.createServer((req, res) => {
+  if (req.url !== '/stats') {
+    res.writeHead(404)
+    res.write('Not Found')
+    return res.end()
+  }
+
+  return res.end()
+})
+
 // Boring Handlers
-client.on('ready', () => log.info(`Connected to Discord as ${client.user.tag}`))
 client.on('error', err => log.error(err))
+client.on('ready', () => {
+  log.info(`Connected to Discord as ${client.user.tag}`)
+
+  const port = PORT || 3000
+  server.listen(port, () => log.info(`Statistics server running on port ${port}`))
+})
 
 // Message Handler
 client.on('message', async message => {

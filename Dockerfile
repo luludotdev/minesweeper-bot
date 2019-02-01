@@ -16,5 +16,6 @@ RUN apk add --no-cache tini bash git openssh curl && \
 COPY . .
 
 # Start Node.js
+EXPOSE 3000
 ENTRYPOINT ["/sbin/tini", "--"]
 CMD ["node", "."]
