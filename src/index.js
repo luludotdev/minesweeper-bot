@@ -21,6 +21,26 @@ const PERMISSIONS = [
   'READ_MESSAGE_HISTORY',
 ]
 
+const about = () => {
+  const commands = [
+    `\`${prefix}minesweeper\` Generate a Minesweeper board`,
+    `\`${prefix}minesweeper invite\` Generate a bot invite URL`,
+    `\`${prefix}minesweeper about\` Show this message`,
+  ].join('\n')
+
+  // Send About Text
+  const embed = new MessageEmbed()
+    .setColor('#afa5fd')
+    .setAuthor('lolPants#0001', 'https://b.catgirlsare.sexy/fFXa.gif')
+    .setThumbnail('https://b.catgirlsare.sexy/koRa.png')
+    .setDescription('Play minesweeper from within Discord!')
+    .addField('Created By', '`lolPants#0001`')
+    .addField('GitHub', 'https://github.com/lolPants/minesweeper-bot')
+    .addField('Commands', commands)
+
+  return embed
+}
+
 // Create the stats server
 const server = http.createServer(async (req, res) => {
   if (req.url !== '/stats') {
@@ -86,26 +106,19 @@ client.on('message', async message => {
   } else if (command === 'minesweeper about') {
     message.channel.startTyping()
 
-    const commands = [
-      `\`${prefix}minesweeper\` Generate a Minesweeper board`,
-      `\`${prefix}minesweeper invite\` Generate a bot invite URL`,
-      `\`${prefix}minesweeper about\` Show this message`,
-    ].join('\n')
-
-    // Send About Text
-    const embed = new MessageEmbed()
-      .setColor('#afa5fd')
-      .setAuthor('lolPants#0001', 'https://b.catgirlsare.sexy/fFXa.gif')
-      .setThumbnail('https://b.catgirlsare.sexy/koRa.png')
-      .setDescription('Play minesweeper from within Discord!')
-      .addField('Created By', '`lolPants#0001`')
-      .addField('GitHub', 'https://github.com/lolPants/minesweeper-bot')
-      .addField('Commands', commands)
-
-    await message.channel.send({ embed })
+    await message.channel.send({ embed: about() })
     return message.channel.stopTyping()
   } else {
     return undefined
+  }
+})
+
+client.on('guildCreate', guild => {
+  if (guild.systemChannel.permissionsFor(client.user).has('SEND_MESSAGES')) {
+    guild.systemChannel.send({ embed: about() })
+  } else {
+    const channel = guild.channels.find(x => x.type === 'text' && x.permissionsFor(client.user).has('SEND_MESSAGES'))
+    channel.send({ embed: about() })
   }
 })
 
