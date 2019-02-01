@@ -117,7 +117,8 @@ client.on('guildCreate', guild => {
   if (guild.systemChannel && guild.systemChannel.permissionsFor(client.user).has('SEND_MESSAGES')) {
     guild.systemChannel.send({ embed: about() })
   } else {
-    const channel = guild.channels.find(x => x.type === 'text' && x.permissionsFor(client.user).has('SEND_MESSAGES'))
+    const channels = guild.channels.filter(x => x.type === 'text' && x.permissionsFor(client.user).has('SEND_MESSAGES'))
+    const channel = channels.find(x => x.name === 'general') || channels.first()
     channel.send({ embed: about() })
   }
 })
