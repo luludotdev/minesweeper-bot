@@ -6,7 +6,7 @@ const EMPTY = ' '
  * @param {number} width Width
  * @param {number} height Height
  * @param {number} bombs Max no. of bombs
- * @returns {(string|number)[][]}
+ * @returns {((string|number)[])[]}
  */
 const generate = (width = 9, height = 9, bombs = 10) => {
   if (bombs > (width * height)) throw new Error('Too many bombs!')
@@ -16,11 +16,11 @@ const generate = (width = 9, height = 9, bombs = 10) => {
 
   let bombsPlaced = 0
   const rand = u => Math.floor(Math.random() * u)
-  
+
   while (bombsPlaced < bombs) {
     const x = rand(width)
     const y = rand(height)
-    
+
     if (board[x][y] === EMPTY) {
       board[x][y] = BOMB
       bombsPlaced++
@@ -57,7 +57,7 @@ const generate = (width = 9, height = 9, bombs = 10) => {
 
 /**
  * Convert a minesweeper board to Discord Text
- * @param {(string|number)[][]} board Board
+ * @param {((string|number)[])[]} board Board
  * @returns {string}
  */
 const translate = board => {
@@ -91,11 +91,13 @@ const translate = board => {
  * @returns {string}
  */
 const minesweeper = (width = 9, height = 9, bombs = 10) => {
-  while (true) {
-    const board = generate()
+  while (true) { // eslint-disable-line
+    const board = generate(width, height, bombs)
     const text = translate(board)
 
     if (text.length > 2000) continue
     else return text
   }
 }
+
+module.exports = { minesweeper }
