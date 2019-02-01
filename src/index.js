@@ -29,10 +29,15 @@ client.on('message', async message => {
 
   const command = message.content.replace(prefix, '')
   if (command === 'minesweeper') {
+    message.channel.startTyping()
+
     // Generate Board
     const board = minesweeper()
-    return message.channel.send(board)
+    await message.channel.send(board)
+    return message.channel.stopTyping()
   } else if (command === 'minesweeper invite') {
+    message.channel.startTyping()
+
     // Send invite link
     const permissions = [
       'SEND_MESSAGES',
@@ -40,8 +45,11 @@ client.on('message', async message => {
     ]
 
     const invite = await client.generateInvite(permissions)
-    return message.channel.send(`<${invite}>`)
+    await message.channel.send(`<${invite}>`)
+    return message.channel.stopTyping()
   } else if (command === 'minesweeper about') {
+    message.channel.startTyping()
+
     const commands = [
       `\`${prefix}minesweeper\` Generate a Minesweeper board`,
       `\`${prefix}minesweeper invite\` Generate a bot invite URL`,
@@ -58,7 +66,8 @@ client.on('message', async message => {
       .addField('GitHub', 'https://github.com/lolPants/minesweeper-bot')
       .addField('Commands', commands)
 
-    return message.channel.send({ embed })
+    await message.channel.send({ embed })
+    return message.channel.stopTyping()
   } else {
     return undefined
   }
