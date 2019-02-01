@@ -15,14 +15,38 @@ const client = new Client()
 client.login(TOKEN)
   .catch(log.error)
 
+// Required Permissions
+const PERMISSIONS = [
+  'SEND_MESSAGES',
+  'READ_MESSAGE_HISTORY',
+]
+
 // Create the stats server
-const server = http.createServer((req, res) => {
+const server = http.createServer(async (req, res) => {
   if (req.url !== '/stats') {
     res.writeHead(404)
     res.write('Not Found')
     return res.end()
   }
 
+  const application = await client.fetchApplication()
+  const invite = await client.generateInvite(PERMISSIONS)
+
+  const data = {
+    clientID: application.id,
+    username: client.user.tag,
+    guilds: client.guilds.size,
+    users: client.users.size,
+    application: {
+      owner: application.owner.tag,
+      public: application.botPublic,
+    },
+    uptime: client.uptime,
+    invite,
+  }
+
+  res.write(JSON.stringify(data))
+  res.write('\n')
   return res.end()
 })
 
@@ -56,12 +80,7 @@ client.on('message', async message => {
     message.channel.startTyping()
 
     // Send invite link
-    const permissions = [
-      'SEND_MESSAGES',
-      'READ_MESSAGE_HISTORY',
-    ]
-
-    const invite = await client.generateInvite(permissions)
+    const invite = await client.generateInvite(PERMISSIONS)
     await message.channel.send(`<${invite}>`)
     return message.channel.stopTyping()
   } else if (command === 'minesweeper about') {
