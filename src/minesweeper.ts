@@ -1,21 +1,21 @@
 const BOMB = 'B'
 const EMPTY = ' '
 
-/**
- * Generate a minesweeper board
- * @param {number} width Width
- * @param {number} height Height
- * @param {number} bombs Max no. of bombs
- * @returns {((string|number)[])[]}
- */
-const generate = (width = 9, height = 9, bombs = 10) => {
-  if (bombs > (width * height)) throw new Error('Too many bombs!')
+export type Board = Array<Array<string | number>>
 
-  const board = Array.from(new Array(width))
-    .map(() => Array.from(new Array(height)).map(() => EMPTY))
+export const generate: (
+  width?: number,
+  height?: number,
+  bombs?: number
+) => Board = (width = 9, height = 9, bombs = 10) => {
+  if (bombs > width * height) throw new Error('Too many bombs!')
+
+  const board: Board = Array.from(new Array(width)).map(() =>
+    Array.from(new Array(height)).map(() => EMPTY)
+  )
 
   let bombsPlaced = 0
-  const rand = u => Math.floor(Math.random() * u)
+  const rand: (u: number) => number = u => Math.floor(Math.random() * u)
 
   while (bombsPlaced < bombs) {
     const x = rand(width)
@@ -44,7 +44,7 @@ const generate = (width = 9, height = 9, bombs = 10) => {
 
       const around = [tl, tm, tr, ml, mr, bl, bm, br]
       const count = around.reduce((acc, curr) => {
-        if (curr === BOMB) acc++
+        if (curr === BOMB) (acc as number)++
         return acc
       }, 0)
 
@@ -55,12 +55,7 @@ const generate = (width = 9, height = 9, bombs = 10) => {
   return board
 }
 
-/**
- * Convert a minesweeper board to Discord Text
- * @param {((string|number)[])[]} board Board
- * @returns {string}
- */
-const translate = board => {
+export const translate: (board: Board) => string = board => {
   const lookup = [
     '⬜',
     ':one:',
@@ -73,25 +68,26 @@ const translate = board => {
     ':eight:',
   ]
 
-  return board.map(x => {
-    const row = x.map(y => {
-      if (y === BOMB) return ':bomb:'
-      else return lookup[y]
-    }).join('||||')
+  return board
+    .map(x => {
+      const row = x
+        .map(y => {
+          if (y === BOMB) return ':bomb:'
+          else return lookup[y as number]
+        })
+        .join('||||')
 
-    return `||${row}||`
-  }).join('\n')
+      return `||${row}||`
+    })
+    .join('\n')
 }
 
-/**
- * Generate a minesweeper board for Discord
- * @param {number} width Width
- * @param {number} height Height
- * @param {number} bombs Max no. of bombs
- * @returns {string}
- */
-const minesweeper = (width = 9, height = 9, bombs = 10) => {
-  while (true) { // eslint-disable-line
+export const minesweeper: (
+  width?: number,
+  height?: number,
+  bombs?: number
+) => string = (width = 9, height = 9, bombs = 10) => {
+  while (true) {
     const board = generate(width, height, bombs)
     const text = translate(board)
 
@@ -99,5 +95,3 @@ const minesweeper = (width = 9, height = 9, bombs = 10) => {
     else return text
   }
 }
-
-module.exports = { minesweeper }

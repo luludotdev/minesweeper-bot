@@ -2,9 +2,10 @@
   "name": "minesweeper-bot",
   "version": "0.1.0",
   "description": "Play minesweeper from within Discord!",
-  "main": "src/index.js",
+  "main": "build/index.js",
   "scripts": {
-    "test": "eslint --color src/"
+    "lint": "tslint -c tslint.json 'src/**/*.ts'",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
@@ -24,12 +25,17 @@
   },
   "homepage": "https://github.com/lolPants/minesweeper-bot#readme",
   "devDependencies": {
-    "eslint": "^5.12.1"
+    "@types/dotenv": "^6.1.0",
+    "@types/node": "^10.12.23",
+    "prettier": "^1.16.4",
+    "tslint": "^5.12.1",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-plugin-prettier": "^2.0.1",
+    "typescript": "^3.3.3"
   },
   "dependencies": {
-    "async-exit-hook": "^2.0.1",
     "discord.js": "github:discordjs/discord.js",
     "dotenv": "^6.2.0",
-    "fancylog": "^3.1.1"
+    "fancylog": "^3.2.1"
   }
 }
