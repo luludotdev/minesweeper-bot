@@ -10,7 +10,7 @@ install:
   - npm i -g npm
   - npm ci
 
-scripts:
+script:
   - npm run lint
 
 after_success:
