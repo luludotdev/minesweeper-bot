@@ -3,10 +3,17 @@ import { PREFIX } from '../environment'
 
 export const aboutEmbed = () => {
   const commands = [
-    `\`${PREFIX}minesweeper\` Generate a Minesweeper board`,
+    `\`${PREFIX}minesweeper\` Generate an *easy* Minesweeper board`,
+    '',
+    `\`${PREFIX}minesweeper easy\` Generate an *easy* Minesweeper board`,
+    `\`${PREFIX}minesweeper normal\` Generate a normal Minesweeper board`,
+    `\`${PREFIX}minesweeper hard\` Generate a **hard** Minesweeper board`,
+    '',
     `\`${PREFIX}minesweeper invite\` Generate a bot invite URL`,
     `\`${PREFIX}minesweeper about\` Show this message`,
-  ].join('\n')
+  ]
+    .map(x => (x === '' ? '' : `- ${x}`))
+    .join('\n')
 
   // Send About Text
   const embed = new MessageEmbed()
