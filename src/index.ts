@@ -1,97 +1,41 @@
 import {
   Client,
   Collection,
-  MessageEmbed,
   PermissionResolvable,
-  Snowflake,
   TextChannel,
   User,
 } from 'discord.js'
-import * as dotenv from 'dotenv'
 import * as log from 'fancylog'
-import { createServer } from 'http'
+import { aboutEmbed } from './commands'
+import { PORT, PREFIX, TOKEN } from './environment'
 import { exitHook } from './utils/exitHook'
 import { minesweeper } from './utils/minesweeper'
-
-// Load Environment Variables
-dotenv.load()
-const { TOKEN, PREFIX, PORT } = process.env
-const prefix = PREFIX || '!'
+import { server } from './utils/stats'
 
 // Create the Bot Client
-const client = new Client()
+export const client = new Client()
 client.login(TOKEN).catch(log.error)
 
 // Required Permissions
-const PERMISSIONS: PermissionResolvable[] = [
+export const PERMISSIONS: PermissionResolvable[] = [
   'SEND_MESSAGES',
   'READ_MESSAGE_HISTORY',
 ]
-
-const about = () => {
-  const commands = [
-    `\`${prefix}minesweeper\` Generate a Minesweeper board`,
-    `\`${prefix}minesweeper invite\` Generate a bot invite URL`,
-    `\`${prefix}minesweeper about\` Show this message`,
-  ].join('\n')
-
-  // Send About Text
-  const embed = new MessageEmbed()
-    .setColor('#afa5fd')
-    .setAuthor('lolPants#0001', 'https://b.catgirlsare.sexy/fFXa.gif')
-    .setThumbnail('https://b.catgirlsare.sexy/koRa.png')
-    .setDescription('Play minesweeper from within Discord!')
-    .addField('Created By', '`lolPants#0001`')
-    .addField('GitHub', 'https://github.com/lolPants/minesweeper-bot')
-    .addField('Commands', commands)
-
-  return embed
-}
-
-// Create the stats server
-const server = createServer(async (req, res) => {
-  if (req.url !== '/stats') {
-    res.writeHead(404)
-    res.write('Not Found')
-    return res.end()
-  }
-
-  const application = await client.fetchApplication()
-  const invite = await client.generateInvite(PERMISSIONS)
-
-  const data = {
-    application: {
-      owner: application.owner && application.owner.tag,
-      public: application.botPublic,
-    },
-    clientID: application.id,
-    guilds: client.guilds.size,
-    invite,
-    uptime: client.uptime,
-    username: client.user && client.user.tag,
-    users: client.users.size,
-  }
-
-  res.write(JSON.stringify(data))
-  res.write('\n')
-  return res.end()
-})
 
 // Boring Handlers
 client.on('error', err => log.error(err))
 client.on('ready', () => {
   log.info(`Connected to Discord as ${client.user && client.user.tag}`)
 
-  const port = PORT || 3000
-  server.listen(port, () =>
-    log.info(`Statistics server running on port ${port}`)
+  server.listen(PORT, () =>
+    log.info(`Statistics server running on port ${PORT}`)
   )
 })
 
 // Message Handler
 client.on('message', async message => {
   if (message.author.bot) return undefined
-  if (!message.content.startsWith(prefix)) return undefined
+  if (!message.content.startsWith(PREFIX)) return undefined
 
   // Check we have perms to send messages
   const channel: TextChannel = message.channel as TextChannel
@@ -100,7 +44,7 @@ client.on('message', async message => {
 
   type Command = 'minesweeper' | 'minesweeper invite' | 'minesweeper about'
 
-  const command = message.content.replace(prefix, '') as Command
+  const command = message.content.replace(PREFIX, '') as Command
   if (command === 'minesweeper') {
     channel.startTyping()
 
@@ -118,7 +62,7 @@ client.on('message', async message => {
   } else if (command === 'minesweeper about') {
     channel.startTyping()
 
-    await channel.send({ embed: about() })
+    await channel.send({ embed: aboutEmbed() })
     return channel.stopTyping()
   } else {
     return undefined
@@ -151,7 +95,7 @@ client.on('guildCreate', guild => {
   }
 
   const ch = findChannel()
-  ch.send({ embed: about() })
+  ch.send({ embed: aboutEmbed() })
 })
 
 // Handle SIGTERM and SIGINT signals properly
