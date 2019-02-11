@@ -4,9 +4,14 @@
   "description": "Play minesweeper from within Discord!",
   "main": "build/index.js",
   "scripts": {
-    "test": "npm run lint",
+    "test": "npm run check && npm run lint",
+    "check": "npm run build -- --noEmit",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
-    "build": "tsc"
+    "prebuild": "rimraf build",
+    "build": "tsc",
+    "build-dev": "npm run build -- --sourceMap",
+    "watch": "tsc --watch",
+    "dev": "npm run watch -- --sourceMap"
   },
   "repository": {
     "type": "git",
