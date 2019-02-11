@@ -6,10 +6,9 @@ import {
   User,
 } from 'discord.js'
 import * as log from 'fancylog'
-import { about, aboutEmbed, invite } from './commands'
+import { about, aboutEmbed, board, invite } from './commands'
 import { PORT, PREFIX, TOKEN } from './environment'
 import { exitHook } from './utils/exitHook'
-import { minesweeper } from './utils/minesweeper'
 import { server } from './utils/stats'
 
 // Create the Bot Client
@@ -53,6 +52,14 @@ client.on('message', async message => {
       return about(message, channel)
     case 'invite':
       return invite(message, channel)
+    case 'easy':
+      return board(message, channel, 'easy')
+    case 'normal':
+      return board(message, channel, 'normal')
+    case 'hard':
+      return board(message, channel, 'hard')
+    case 'default':
+      return board(message, channel, 'easy')
     default:
       return undefined
   }
