@@ -10,8 +10,8 @@ import {
 import * as dotenv from 'dotenv'
 import * as log from 'fancylog'
 import { createServer } from 'http'
-import { exitHook } from './exitHook'
-import { minesweeper } from './minesweeper'
+import { exitHook } from './utils/exitHook'
+import { minesweeper } from './utils/minesweeper'
 
 // Load Environment Variables
 dotenv.load()
