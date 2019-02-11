@@ -4,10 +4,15 @@ type Hook = (callback: Callback) => void
 const hooks: Set<Hook> = new Set()
 const timeout = 10 * 1000
 
+let running = false
+
 export const exitHook: (hook: Hook) => void = hook => {
   hooks.add(hook)
 
   if (hooks.size === 1) {
+    hookErrorEvent('uncaughtException')
+    hookErrorEvent('unhandledRejection')
+
     hookEvent('exit')
     hookEvent('beforeExit', 0)
     hookEvent('SIGHUP', 128 + 1)
@@ -25,24 +30,52 @@ type ExitEvent =
   | 'SIGTERM'
   | 'SIGBREAK'
 
-const hookEvent: (event: ExitEvent, code?: number) => void = (event, code) => {
-  process.on(event as NodeJS.Signals, () => runHooks(code))
+type ExitErrorEvent = 'uncaughtException' | 'unhandledRejection'
+
+const hookEvent: (event: ExitEvent, code?: number, error?: Error) => void = (
+  event,
+  code,
+  error
+) => {
+  process.on(event as NodeJS.Signals, (c: unknown) => {
+    if (event === 'exit') runHooks(c as number, error)
+    else runHooks(code, error)
+  })
 }
 
-const runHooks: (code?: number) => void = code => {
+const hookErrorEvent: (event: ExitErrorEvent) => void = event => {
+  process.on(event as NodeJS.Signals, (e: unknown) => {
+    const error: Error | undefined = e as Error
+    runHooks(1, error)
+  })
+}
+
+const runHooks: (code?: number, error?: Error) => void = (code, error) => {
+  if (running) return undefined
+  running = true
+
   setTimeout(() => {
+    printError(error)
     process.exit(code)
   }, timeout)
 
   for (const hook of hooks) {
     hook(() => {
       hooks.delete(hook)
-      checkHooks(code)
+      checkHooks(code, error)
     })
   }
 }
 
-const checkHooks: (code?: number) => void = code => {
+const printError: (error?: Error) => void = error => {
+  if (!error) return undefined
+
+  process.stderr.write(error.stack || '')
+}
+
+const checkHooks: (code?: number, error?: Error) => void = (code, error) => {
   if (hooks.size !== 0) return undefined
-  else return process.exit(code)
+
+  printError(error)
+  return process.exit(code)
 }
