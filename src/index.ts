@@ -6,7 +6,7 @@ import {
   User,
 } from 'discord.js'
 import * as log from 'fancylog'
-import { aboutEmbed } from './commands'
+import { about, aboutEmbed, invite } from './commands'
 import { PORT, PREFIX, TOKEN } from './environment'
 import { exitHook } from './utils/exitHook'
 import { minesweeper } from './utils/minesweeper'
@@ -42,30 +42,19 @@ client.on('message', async message => {
   const perms = channel.permissionsFor(client.user as User)
   if (perms && !perms.has('SEND_MESSAGES')) return undefined
 
-  type Command = 'minesweeper' | 'minesweeper invite' | 'minesweeper about'
+  // Handle Commands
+  const command = message.content
+    .replace(`${PREFIX}minesweeper `, '')
+    .replace(`${PREFIX}minesweeper`, 'default')
+    .toLowerCase()
 
-  const command = message.content.replace(PREFIX, '') as Command
-  if (command === 'minesweeper') {
-    channel.startTyping()
-
-    // Generate Board
-    const board = minesweeper()
-    await channel.send(board)
-    return channel.stopTyping()
-  } else if (command === 'minesweeper invite') {
-    channel.startTyping()
-
-    // Send invite link
-    const invite = await client.generateInvite(PERMISSIONS)
-    await channel.send(`<${invite}>`)
-    return channel.stopTyping()
-  } else if (command === 'minesweeper about') {
-    channel.startTyping()
-
-    await channel.send({ embed: aboutEmbed() })
-    return channel.stopTyping()
-  } else {
-    return undefined
+  switch (command) {
+    case 'about':
+      return about(message, channel)
+    case 'invite':
+      return invite(message, channel)
+    default:
+      return undefined
   }
 })
 
