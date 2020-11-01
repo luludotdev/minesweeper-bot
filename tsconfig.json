@@ -17,6 +17,7 @@
     "importHelpers": true,
     "baseUrl": "./src",
     "paths": {
+      "~": ["."],
       "~env": ["env"],
       "~utils/*": ["utils/*"]
     },
