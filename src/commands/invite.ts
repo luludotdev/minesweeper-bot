@@ -11,7 +11,7 @@ export const invite = async (message: Message, channel: TextChannel) => {
 
   try {
     const inviteURL = await client.generateInvite(PERMISSIONS)
-    await channel.send(`<${String(inviteURL)}>`)
+    await channel.send(`<${inviteURL}>`)
   } finally {
     channel.stopTyping()
   }
