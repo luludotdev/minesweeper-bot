@@ -15,8 +15,11 @@
     "rootDir": "./src",
     "sourceMap": true,
     "importHelpers": true,
-    "baseUrl": ".",
-    "paths": {},
+    "baseUrl": "./src",
+    "paths": {
+      "~env": ["env"],
+      "~utils/*": ["utils/*"]
+    },
     "plugins": [{ "transform": "@zerollup/ts-transform-paths" }]
   },
   "include": [
