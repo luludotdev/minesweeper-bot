@@ -6,7 +6,7 @@ import {
 } from 'discord.js'
 import { client } from '~'
 
-const PERMISSIONS: PermissionResolvable[] = [
+export const PERMISSIONS: PermissionResolvable[] = [
   'SEND_MESSAGES',
   'READ_MESSAGE_HISTORY',
 ]

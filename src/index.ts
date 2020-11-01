@@ -2,15 +2,20 @@ import 'source-map-support/register'
 
 import { Client, Collection, TextChannel, User } from 'discord.js'
 import { about, aboutEmbed, board, invite } from '~commands'
-import { PREFIX, TOKEN } from '~env'
+import { PORT, PREFIX, TOKEN } from '~env'
 import { exitHook } from '~utils/exitHook'
 import signale, { panic } from '~utils/signale'
+import { server } from '~utils/stats'
 
 export const client = new Client()
 client.on('error', err => signale.error(err))
 client.on('ready', () => {
   const tag = client.user?.tag ?? 'Unknown#0000'
   signale.info(`Connected to Discord as ${tag}`)
+
+  server.listen(PORT, () =>
+    signale.info(`Statistics server running on port ${PORT}`)
+  )
 })
 
 client.on('message', async message => {
