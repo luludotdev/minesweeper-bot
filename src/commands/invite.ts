@@ -1,4 +1,9 @@
-import { Message, PermissionResolvable, TextChannel } from 'discord.js'
+import {
+  DMChannel,
+  Message,
+  PermissionResolvable,
+  TextChannel,
+} from 'discord.js'
 import { client } from '~'
 
 const PERMISSIONS: PermissionResolvable[] = [
@@ -6,7 +11,7 @@ const PERMISSIONS: PermissionResolvable[] = [
   'READ_MESSAGE_HISTORY',
 ]
 
-export const invite = async (message: Message, channel: TextChannel) => {
+export const invite = async (_: Message, channel: TextChannel | DMChannel) => {
   void channel.startTyping()
 
   try {

@@ -1,4 +1,4 @@
-import { Message, MessageEmbed, TextChannel } from 'discord.js'
+import { DMChannel, Message, MessageEmbed, TextChannel } from 'discord.js'
 import { PREFIX } from '~env'
 
 export const aboutEmbed = () => {
@@ -28,7 +28,7 @@ export const aboutEmbed = () => {
   return embed
 }
 
-export const about = async (_: Message, channel: TextChannel) => {
+export const about = async (_: Message, channel: TextChannel | DMChannel) => {
   void channel.startTyping()
 
   try {

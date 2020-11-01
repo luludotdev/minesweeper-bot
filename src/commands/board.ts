@@ -1,4 +1,4 @@
-import { Message, TextChannel } from 'discord.js'
+import { DMChannel, Message, TextChannel } from 'discord.js'
 import { minesweeper } from '../utils/minesweeper'
 
 type Difficulty = 'easy' | 'normal' | 'hard'
@@ -18,8 +18,8 @@ const getDifficulty = (diff: Difficulty): DifficultyTuple => {
 }
 
 export const board = async (
-  message: Message,
-  channel: TextChannel,
+  _: Message,
+  channel: TextChannel | DMChannel,
   diff: Difficulty
 ) => {
   void channel.startTyping()
