@@ -1,7 +1,7 @@
 import 'source-map-support/register'
 
-import { Client, User } from 'discord.js'
-import { about, board, invite } from '~commands'
+import { Client, Collection, TextChannel, User } from 'discord.js'
+import { about, aboutEmbed, board, invite } from '~commands'
 import { PREFIX, TOKEN } from '~env'
 import { exitHook } from '~utils/exitHook'
 import signale, { panic } from '~utils/signale'
@@ -47,6 +47,33 @@ client.on('message', async message => {
     default:
       break
   }
+})
+
+client.on('guildCreate', guild => {
+  const clientUser = client.user
+  if (clientUser === null) return undefined
+
+  const findChannel = () => {
+    if (guild.systemChannel !== null) {
+      const perms = guild.systemChannel.permissionsFor(clientUser)
+      if (perms?.has('SEND_MESSAGES')) return guild.systemChannel
+    }
+
+    const channels = guild.channels.cache.filter(
+      channel => channel.type === 'text'
+    ) as Collection<string, TextChannel>
+
+    const filtered = channels.filter(x => {
+      const perms = x.permissionsFor(clientUser)
+      if (perms === null) return false
+      return perms.has('SEND_MESSAGES')
+    })
+
+    return channels.find(x => x.name === 'general') ?? filtered.first()
+  }
+
+  const ch = findChannel()
+  if (ch) void ch.send({ embed: aboutEmbed() })
 })
 
 client.login(TOKEN).catch(error => panic(error))
