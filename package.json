@@ -11,6 +11,9 @@
     "node": ">=12"
   },
   "scripts": {
+    "test": "yarn run check && yarn run lint",
+    "check": "yarn run compile --noEmit",
+    "lint": "xo",
     "compile": "tsc",
     "clean": "rimraf build",
     "prebuild": "yarn run clean",
@@ -23,10 +26,14 @@
     "@zerollup/ts-transform-paths": "^1.7.18",
     "nodemon": "^2.0.6",
     "rimraf": "^3.0.2",
-    "typescript": "^4.0.5"
+    "typescript": "^4.0.5",
+    "xo": "^0.34.1"
   },
   "dependencies": {
     "source-map-support": "^0.5.19",
     "tslib": "^2.0.3"
+  },
+  "resolutions": {
+    "xo/prettier": "^2.1.2"
   }
 }
