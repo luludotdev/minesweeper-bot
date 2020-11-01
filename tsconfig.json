@@ -19,6 +19,7 @@
     "paths": {
       "~": ["."],
       "~env": ["env"],
+      "~commands": ["commands"],
       "~utils/*": ["utils/*"]
     },
     "plugins": [{ "transform": "@zerollup/ts-transform-paths" }]
