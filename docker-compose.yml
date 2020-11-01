@@ -1,8 +1,0 @@
-version: '3.7'
-services:
-  bot:
-    image: lolpants/minesweeper-bot
-    build: '.'
-    restart: always
-    env_file:
-    - .env
