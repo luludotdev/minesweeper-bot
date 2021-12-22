@@ -1,49 +1,5 @@
 {
   "name": "minesweeper-bot",
-  "version": "0.2.0",
-  "description": "Play minesweeper from within Discord!",
-  "main": "build/index.js",
-  "repository": "git@github.com:lolPants/minesweeper-bot.git",
-  "author": "Jack Baron <jackmbaron@gmail.com> (https://www.jackbaron.com)",
-  "license": "ISC",
-  "private": true,
-  "engines": {
-    "node": ">=12"
-  },
-  "scripts": {
-    "test": "yarn run check && yarn run lint",
-    "check": "yarn run compile --noEmit",
-    "lint": "xo",
-    "compile": "ttsc",
-    "clean": "rimraf build",
-    "prebuild": "yarn run clean",
-    "build": "yarn run compile",
-    "dev": "yarn run build --watch",
-    "debug": "nodemon --inspect . --watch build"
-  },
-  "devDependencies": {
-    "@types/node": "^14.14.6",
-    "@zerollup/ts-transform-paths": "^1.7.18",
-    "nodemon": "^2.0.6",
-    "rimraf": "^3.0.2",
-    "ttypescript": "^1.5.12",
-    "typescript": "^4.0.5",
-    "xo": "^0.34.1"
-  },
-  "dependencies": {
-    "@lolpants/signale": "^1.5.0",
-    "discord.js": "^12.4.1",
-    "dotenv": "^8.2.0",
-    "source-map-support": "^0.5.19",
-    "tslib": "^2.0.3"
-  },
-  "resolutions": {
-    "xo/prettier": "^2.1.2"
-  },
-  "optionalDependencies": {
-    "bufferutil": "^4.0.2",
-    "erlpack": "discord/erlpack",
-    "utf-8-validate": "^5.0.3",
-    "zlib-sync": "^0.1.7"
-  }
+  "packageManager": "yarn@3.1.1",
+  "license": "MIT"
 }
