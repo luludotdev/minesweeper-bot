@@ -3,6 +3,7 @@ import {
   type APIMessageInteraction,
   InteractionResponseType,
   InteractionType,
+  type APIChatInputApplicationCommandInteraction
 } from 'discord-api-types/payloads/v9'
 import { verifyKey } from 'discord-interactions'
 import { ReasonPhrases, StatusCodes } from 'http-status-codes'
@@ -43,6 +44,31 @@ handler.post(async (request, response) => {
   const message = request.body as APIMessageInteraction
   if (message.type === InteractionType.Ping) {
     response.send({ type: InteractionResponseType.Pong })
+  } else if (message.type === InteractionType.ApplicationCommand) {
+    const interaction = message as unknown as APIChatInputApplicationCommandInteraction
+    switch (interaction.data.name) {
+      case 'testsweeper':
+      case 'minesweeper': {
+        const options = interaction.data.options ?? []
+        const difficultyOption = options.find(x => x.name === 'difficulty') as unknown as Record<string, string> | undefined
+        const difficulty = difficultyOption?.value ?? 'normal'
+
+        // TODO
+        response.status(200).send({
+          type: InteractionResponseType.ChannelMessageWithSource,
+          data: { content: `Selected Difficulty: \`${difficulty}\`` }
+        })
+
+        break
+      }
+
+      default: {
+        response.status(StatusCodes.NOT_FOUND).send(ReasonPhrases.NOT_FOUND)
+        break
+      }
+    }
+  } else {
+    response.status(StatusCodes.BAD_REQUEST).send(ReasonPhrases.BAD_REQUEST)
   }
 })
 
