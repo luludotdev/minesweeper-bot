@@ -55,18 +55,17 @@ handler.post(async (request, response) => {
         const difficultyOption = options.find(x => x.name === 'difficulty') as unknown as Record<string, string> | undefined
         const difficulty = difficultyOption?.value ?? 'normal'
 
-        console.log(difficulty)
-
         if (!isDifficulty(difficulty)) {
           response.status(StatusCodes.BAD_REQUEST).send(ReasonPhrases.BAD_REQUEST)
           return
         }
 
         const [width, height, bombs] = getDifficulty(difficulty)
-        console.log({ width, height, bombs })
+        const board = minesweeper(width, height, bombs)
+
         response.status(200).send({
           type: InteractionResponseType.ChannelMessageWithSource,
-          data: { content: `Selected Difficulty: \`${difficulty}\`` }
+          data: { content: board }
         })
 
         break
