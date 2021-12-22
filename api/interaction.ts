@@ -1,9 +1,10 @@
+/* eslint-disable import/extensions */
 import { type VercelRequest, type VercelResponse } from '@vercel/node'
 import {
+  type APIChatInputApplicationCommandInteraction,
   type APIMessageInteraction,
   InteractionResponseType,
   InteractionType,
-  type APIChatInputApplicationCommandInteraction
 } from 'discord-api-types/payloads/v9'
 import { verifyKey } from 'discord-interactions'
 import { ReasonPhrases, StatusCodes } from 'http-status-codes'
@@ -47,16 +48,23 @@ handler.post(async (request, response) => {
   if (message.type === InteractionType.Ping) {
     response.send({ type: InteractionResponseType.Pong })
   } else if (message.type === InteractionType.ApplicationCommand) {
-    const interaction = message as unknown as APIChatInputApplicationCommandInteraction
+    const interaction =
+      message as unknown as APIChatInputApplicationCommandInteraction
+
     switch (interaction.data.name) {
       case 'testsweeper':
       case 'minesweeper': {
         const options = interaction.data.options ?? []
-        const difficultyOption = options.find(x => x.name === 'difficulty') as unknown as Record<string, string> | undefined
+        const difficultyOption = options.find(
+          x => x.name === 'difficulty'
+        ) as unknown as Record<string, string> | undefined
         const difficulty = difficultyOption?.value ?? 'normal'
 
         if (!isDifficulty(difficulty)) {
-          response.status(StatusCodes.BAD_REQUEST).send(ReasonPhrases.BAD_REQUEST)
+          response
+            .status(StatusCodes.BAD_REQUEST)
+            .send(ReasonPhrases.BAD_REQUEST)
+
           return
         }
 
@@ -65,7 +73,7 @@ handler.post(async (request, response) => {
 
         response.status(200).send({
           type: InteractionResponseType.ChannelMessageWithSource,
-          data: { content: board }
+          data: { content: board },
         })
 
         break

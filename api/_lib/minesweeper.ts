@@ -25,8 +25,8 @@ export const generate: (
 ) => Board = (width = 9, height = 9, bombs = 10) => {
   if (bombs > width * height) throw new Error('Too many bombs!')
 
-  const board: Board = [...new Array(width)].map(() =>
-    [...new Array(height)].map(() => Tokens.EMPTY)
+  const board: Board = Array.from({ length: width }).map(() =>
+    Array.from({ length: height }).map(() => Tokens.EMPTY)
   )
 
   let bombsPlaced = 0
@@ -102,6 +102,7 @@ export const minesweeper: (
   height?: number,
   bombs?: number
 ) => string = (width = 9, height = 9, bombs = 10) => {
+  // eslint-disable-next-line no-constant-condition
   while (true) {
     const board = generate(width, height, bombs)
     const text = translate(board)
