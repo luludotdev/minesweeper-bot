@@ -23,10 +23,12 @@ const minesweeperCommand = new SlashCommandBuilder()
 
 const rest = new REST({ version: '9' }).setToken(REST_TOKEN)
 if (DEBUG_GUILD) {
+  console.log(`Debug deploying to ${DEBUG_GUILD}`)
   await rest.put(Routes.applicationGuildCommands(CLIENT_ID, DEBUG_GUILD), {
     body: [minesweeperCommand.toJSON()],
   })
 } else {
+  console.log('Deploying globally')
   await rest.put(Routes.applicationCommands(CLIENT_ID), {
     body: [minesweeperCommand.toJSON()],
   })
