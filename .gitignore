@@ -5,3 +5,5 @@
 !/.yarn/plugins
 !/.yarn/releases
 !/.yarn/sdks
+
+.vercel
