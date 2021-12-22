@@ -10,6 +10,8 @@ import { ReasonPhrases, StatusCodes } from 'http-status-codes'
 import nc from 'next-connect'
 import { env } from 'node:process'
 import getRawBody from 'raw-body'
+import { getDifficulty, isDifficulty } from './_lib/difficulty'
+import { minesweeper } from './_lib/minesweeper'
 
 const extractHeader: (
   header: string | string[] | undefined
@@ -53,7 +55,15 @@ handler.post(async (request, response) => {
         const difficultyOption = options.find(x => x.name === 'difficulty') as unknown as Record<string, string> | undefined
         const difficulty = difficultyOption?.value ?? 'normal'
 
-        // TODO
+        console.log(difficulty)
+
+        if (!isDifficulty(difficulty)) {
+          response.status(StatusCodes.BAD_REQUEST).send(ReasonPhrases.BAD_REQUEST)
+          return
+        }
+
+        const [width, height, bombs] = getDifficulty(difficulty)
+        console.log({ width, height, bombs })
         response.status(200).send({
           type: InteractionResponseType.ChannelMessageWithSource,
           data: { content: `Selected Difficulty: \`${difficulty}\`` }
