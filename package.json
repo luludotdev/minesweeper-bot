@@ -4,7 +4,7 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "lint": "xo ./src ./bin",
+    "lint": "xo ./api ./bin",
     "deploy": "node ./bin/deploy.mjs"
   },
   "devDependencies": {
