@@ -6,22 +6,28 @@ import dotenv from 'dotenv'
 import { env } from 'node:process'
 
 dotenv.config()
-const { REST_TOKEN, CLIENT_ID } = env
+const { REST_TOKEN, CLIENT_ID, DEBUG_GUILD } = env
 
 const minesweeperCommand = new SlashCommandBuilder()
-  .setName('minesweeper')
+  .setName(DEBUG_GUILD ? 'testsweeper' : 'minesweeper')
   .setDescription('Generate a minesweeper board.')
   .addStringOption(option =>
     option
       .setName('difficulty')
       .setDescription('Board Difficulty')
       .setRequired(true)
-      .addChoice('Easy', 'easy')
-      .addChoice('Normal', 'normal')
-      .addChoice('Hard', 'hard')
+      .addChoice('easy', 'easy')
+      .addChoice('normal', 'normal')
+      .addChoice('hard', 'hard')
   )
 
 const rest = new REST({ version: '9' }).setToken(REST_TOKEN)
-await rest.put(Routes.applicationCommands(CLIENT_ID), {
-  body: [minesweeperCommand.toJSON()],
-})
+if (DEBUG_GUILD) {
+  await rest.put(Routes.applicationGuildCommands(CLIENT_ID, DEBUG_GUILD), {
+    body: [minesweeperCommand.toJSON()],
+  })
+} else {
+  await rest.put(Routes.applicationCommands(CLIENT_ID), {
+    body: [minesweeperCommand.toJSON()],
+  })
+}
