@@ -1,11 +1,18 @@
-import nc from 'next-connect'
-import getRawBody from 'raw-body'
-import { verifyKey } from 'discord-interactions'
 import { type VercelRequest, type VercelResponse } from '@vercel/node'
-import { StatusCodes, ReasonPhrases } from 'http-status-codes'
-import { InteractionResponseType, InteractionType, type APIMessageInteraction } from 'discord-api-types/payloads/v9'
+import {
+  type APIMessageInteraction,
+  InteractionResponseType,
+  InteractionType,
+} from 'discord-api-types/payloads/v9'
+import { verifyKey } from 'discord-interactions'
+import { ReasonPhrases, StatusCodes } from 'http-status-codes'
+import nc from 'next-connect'
+import { env } from 'node:process'
+import getRawBody from 'raw-body'
 
-const extractHeader: (header: string | string[] | undefined) => string | undefined = header => Array.isArray(header) ? header[0] : header
+const extractHeader: (
+  header: string | string[] | undefined
+) => string | undefined = header => (Array.isArray(header) ? header[0] : header)
 
 const handler = nc<VercelRequest, VercelResponse>()
 handler.post(async (request, response) => {
@@ -22,13 +29,12 @@ handler.post(async (request, response) => {
   }
 
   const rawBody = await getRawBody(request)
-  const isValid = verifyKey(
-    rawBody,
-    signature,
-    timestamp,
-    process.env.PUBLIC_KEY!
-  )
+  const publicKey = env.PUBLIC_KEY
+  if (!publicKey) {
+    throw new Error('missing PUBLIC_KEY env var')
+  }
 
+  const isValid = verifyKey(rawBody, signature, timestamp, publicKey)
   if (!isValid) {
     response.status(StatusCodes.FORBIDDEN).send(ReasonPhrases.FORBIDDEN)
     return
