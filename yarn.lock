@@ -17,9 +17,35 @@ __metadata:
   resolution: "minesweeper-bot@workspace:."
   dependencies:
     "@types/node": ^17.0.2
+    next-connect: ^0.11.0
     typescript: ^4.5.4
   languageName: unknown
   linkType: soft
+
+"next-connect@npm:^0.11.0":
+  version: 0.11.0
+  resolution: "next-connect@npm:0.11.0"
+  dependencies:
+    trouter: ^3.1.0
+  checksum: 0e5253b2e8fd3b722af2276022720affbcae29201e676d6aa4548b61f8036a56df83c08666c0457020029893c3f9565fc2040b2ce9aacc04eba0f64384f56e17
+  languageName: node
+  linkType: hard
+
+"regexparam@npm:^1.3.0":
+  version: 1.3.0
+  resolution: "regexparam@npm:1.3.0"
+  checksum: ea6449d9984392cdf401d3d9b722a56357224fba7e9fdf2887f1901e0d3a838052d3b92b30f2276047bf5d5b6a1a90b7dff6aa1c89599b246a86285e7e3e3fd4
+  languageName: node
+  linkType: hard
+
+"trouter@npm:^3.1.0":
+  version: 3.2.0
+  resolution: "trouter@npm:3.2.0"
+  dependencies:
+    regexparam: ^1.3.0
+  checksum: 50beb18d4cf0239fe5ee81368d59f08b25298869d169d39c35b1c1d142e922025e14a648989382da70d4064d2ac7900b4348401caa0a235c3cccabaaa85351ef
+  languageName: node
+  linkType: hard
 
 "typescript@npm:^4.5.4":
   version: 4.5.4
